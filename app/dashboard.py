@@ -12,6 +12,7 @@ import numpy as np
 import joblib
 import json
 import matplotlib.pyplot as plt
+import shap
 
 st.set_page_config(page_title="Insider Threat Detection", layout="wide")
 
@@ -34,9 +35,10 @@ def load_artifacts():
     feature_cols = joblib.load(FEATURES_PATH)
     with open(BEST_MODEL_NAME_PATH) as f:
         best_name = json.load(f)["best_model"]
-    return model, scaler, feature_cols, best_name
+    explainer = shap.TreeExplainer(model)
+    return model, scaler, feature_cols, best_name, explainer
 
-model, scaler, feature_cols, best_name = load_artifacts()
+model, scaler, feature_cols, best_name, explainer = load_artifacts()
 
 st.title("🛡️ Insider Threat Detection in Cloud Environments")
 st.caption(f"Active model: **{best_name}**")
@@ -157,3 +159,20 @@ with tab2:
             st.success(f"✅ Normal activity — risk score: {prob:.3f}")
 
         st.progress(min(int(prob * 100), 100))
+        st.subheader("Why this decision? (Top contributing factors)")
+        shap_vals = explainer.shap_values(X_manual_scaled)
+        shap_vals_pos = shap_vals[1] if isinstance(shap_vals, list) else shap_vals
+
+        contrib_df = pd.DataFrame({
+            "feature": feature_cols,
+            "shap_value": shap_vals_pos[0]
+        })
+        contrib_df["abs_value"] = contrib_df["shap_value"].abs()
+        top_contrib = contrib_df.sort_values("abs_value", ascending=False).head(8)
+
+        fig, ax = plt.subplots(figsize=(7, 4))
+        colors = ["crimson" if v > 0 else "steelblue" for v in top_contrib["shap_value"]]
+        ax.barh(top_contrib["feature"], top_contrib["shap_value"], color=colors)
+        ax.set_xlabel("SHAP value (red = pushes toward malicious, blue = pushes toward normal)")
+        ax.invert_yaxis()
+        st.pyplot(fig)
