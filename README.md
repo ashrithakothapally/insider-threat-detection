@@ -12,15 +12,20 @@ detection system that flags unusual activity patterns per user, using
 supervised ML on engineered behavioral features.
 
 ## 🗂️ Project Structure
+# Insider Threat Detection
+
+```text
 insider-threat-detection/
-├── data/              # raw + processed datasets
-├── notebooks/         # EDA, model comparison, SHAP analysis
-├── src/               # data generation, preprocessing, training scripts
-├── models/            # saved trained model, scaler, feature list
-├── app/               # Streamlit dashboard
-├── outputs/           # plots, model comparison results
-├── requirements.txt
-└── README.md
+│
+├── data/                  # Raw and processed datasets
+├── notebooks/             # EDA, model comparison, SHAP analysis
+├── src/                   # Data generation, preprocessing, training scripts
+├── models/                # Saved trained model, scaler, feature list
+├── app/                   # Streamlit dashboard
+├── outputs/               # Plots and model comparison results
+├── requirements.txt       # Project dependencies
+└── README.md              # Project documentation
+```
 ## ⚙️ Tech Stack
 - **Language:** Python 3
 - **ML Libraries:** scikit-learn, XGBoost, LightGBM, CatBoost, imbalanced-learn
