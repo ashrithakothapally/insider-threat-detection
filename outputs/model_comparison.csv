@@ -1,0 +1,6 @@
+model,precision,recall,f1_score,roc_auc
+CatBoost,0.9835,0.4897,0.6538,0.7383
+LightGBM,0.9833,0.4856,0.6501,0.738
+XGBoost,0.9833,0.4856,0.6501,0.731
+RandomForest,0.9154,0.4897,0.6381,0.7488
+AdaBoost,0.5284,0.4979,0.5127,0.7284
